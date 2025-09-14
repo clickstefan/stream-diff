@@ -1,0 +1,6 @@
+source:
+  type: csv
+  path: testdata/testcase3_csv_with_json/source2.csv
+  parser_config:
+    # try to parse string fields as json
+    json_in_string: true

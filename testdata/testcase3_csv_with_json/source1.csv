@@ -1,0 +1,3 @@
+record_id,event_name,details
+rec-01,user_signup,"{""user_id"":""usr-123"",""payload"":""{\""source\"":\""web\"",\""ip\"":\""192.168.1.1\"",\""timestamp\"":\""2025-09-13T12:00:00Z\""}""}"
+rec-02,payment_success,"{""user_id"":""usr-456"",""amount"":100,""payload"":""{\""source\"":\""api\"",\""ref\"":\""xyz\"",\""timestamp\"":\""2025-09-13T12:05:00Z\""}""}"

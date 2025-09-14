@@ -1,0 +1,39 @@
+summary:
+  source1_rows: 2
+  source2_rows: 2
+  matching_keys: 1
+  identical_rows: 0
+  keys_only_in_source1: 1
+  keys_only_in_source2: 1
+schema_comparison:
+  source1_only_fields:
+    - details.amount
+    - details.payload.ip
+    - details.payload.ref
+  source2_only_fields:
+    - details.reason
+  fields_with_type_diffs: []
+value_diffs_by_key:
+  "rec-01":
+    - field: details.payload.source
+      source1_value: "web"
+      source2_value: "mobile"
+    - field: details.payload.timestamp
+      source1_value: "2025-09-13T12:00:00Z"
+      source2_value: "2025-09-13T12:00:05Z"
+keys_only:
+  in_source1:
+    - "rec-02"
+  in_source2:
+    - "rec-03"
+field_stats:
+  source1:
+    fields:
+      record_id: { cardinality: 2, availability: 1.0 }
+      details.payload.timestamp: { min: "2025-09-13T12:00:00Z", max: "2025-09-13T12:05:00Z", avgDaysAgo: 0.0, availability: 1.0 }
+      # other stats omitted for brevity
+  source2:
+    fields:
+      record_id: { cardinality: 2, availability: 1.0 }
+      details.payload.timestamp: { min: "2025-09-13T12:00:05Z", max: "2025-09-13T12:10:00Z", avgDaysAgo: 0.0, availability: 1.0 }
+      # other stats omitted for brevity

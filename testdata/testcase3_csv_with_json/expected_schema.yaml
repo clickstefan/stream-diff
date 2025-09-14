@@ -1,0 +1,47 @@
+key: record_id
+fields:
+  record_id:
+    type: string
+    stats: [availability, cardinality]
+    matchers:
+      - regex: "^rec-[0-9]{2}$"
+  event_name:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  details:
+    type: object
+    stats: [availability]
+    matchers: []
+  details.user_id:
+    type: string
+    stats: [availability, cardinality]
+    matchers:
+      - regex: "^usr-[0-9]{3}$"
+  details.amount:
+    type: numeric
+    stats: [min, max, avg, availability]
+    matchers:
+      - isNumeric: true
+  details.payload:
+    type: object # This was parsed from a string
+    stats: [availability]
+    matchers: []
+  details.payload.source:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  details.payload.ip:
+    type: string
+    stats: [availability, cardinality]
+    matchers:
+      - regex: "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$"
+  details.payload.ref:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  details.payload.timestamp:
+    type: timestamp
+    stats: [min, max, avg, avgDaysAgo, availability]
+    matchers:
+    - isDateTime: true

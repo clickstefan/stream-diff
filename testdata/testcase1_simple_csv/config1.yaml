@@ -1,0 +1,3 @@
+source:
+  type: csv
+  path: testdata/testcase1_simple_csv/source1.csv
