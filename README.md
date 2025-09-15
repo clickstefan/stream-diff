@@ -18,6 +18,7 @@ This is particularly useful for data validation, migration testing, and ensuring
 - **Advanced String Parsing:**
     - Can detect and recursively parse JSON strings embedded within other file formats (e.g., a CSV field containing a JSON object).
     - Identifies field patterns using a library of built-in regex matchers and supports custom matchers.
+    - **NEW**: Optional AI-powered pattern detection using embedded models (offline) or Claude/Anthropic APIs (online) to automatically generate regex patterns for data validation.
 - **Intelligent Date/Time Handling:**
     - Parses and compares `date`, `datetime`, and `timestamp` fields, even if their string formats differ between sources.
     - Supports timestamps with variable precision.
@@ -43,6 +44,22 @@ source:
   parser_config:
     # Set to true to enable recursive parsing of string fields that look like JSON.
     json_in_string: true
+
+# Optional: Enable AI-powered pattern detection
+pattern_detection:
+  enabled: true
+  mode: offline  # or "online" for Claude/Anthropic API
+  
+  # Offline mode (built-in pattern recognition)
+  offline_model:
+    # Uses built-in patterns for common data types
+    
+  # Online mode configuration (for Claude/Anthropic API)
+  # online_api:
+  #   provider: claude  # or "anthropic"
+  #   api_key: "your-api-key-here"
+  #   model: "claude-3-haiku-20240307"  # optional
+
 # Optional: Define a schema to use instead of generating one.
 # schema:
 #   key: user_id
@@ -57,6 +74,40 @@ To run a comparison, use the `compare` command and provide the paths to the two 
 ```bash
 # (Once implemented)
 go run ./cmd/comparator compare ./config1.yaml ./config2.yaml
+```
+
+## AI-Powered Pattern Detection
+
+This tool includes optional AI-powered pattern detection to automatically identify regex patterns in your data fields and enhance schema generation. This feature helps complete the schema with appropriate matchers for data validation.
+
+### Offline Mode
+Uses built-in pattern recognition for common data types:
+- Email addresses
+- Phone numbers  
+- URLs
+- IP addresses
+- UUIDs
+- Numeric values
+- Date/time values
+
+### Online Mode
+Integrates with AI services (Claude/Anthropic) for more sophisticated pattern detection:
+- Analyzes field samples using AI
+- Generates custom regex patterns
+- Supports complex data patterns beyond built-in types
+
+### Configuration
+Enable pattern detection in your config file:
+```yaml
+pattern_detection:
+  enabled: true
+  mode: offline  # or "online"
+  
+  # For online mode:
+  online_api:
+    provider: claude
+    api_key: "your-api-key"
+    model: "claude-3-haiku-20240307"
 ```
 
 ## Testing
