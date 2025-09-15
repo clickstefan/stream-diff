@@ -136,7 +136,17 @@ func CollectFieldValues(data interface{}, fieldValues map[string][]interface{}) 
 			continue
 		}
 
-		if m, ok := item.data.(map[string]interface{}); ok {
+		var m map[string]interface{}
+		var ok bool
+		if record, isRecord := item.data.(datareader.Record); isRecord {
+			m = map[string]interface{}(record)
+			ok = true
+		} else if mapData, isMap := item.data.(map[string]interface{}); isMap {
+			m = mapData
+			ok = true
+		}
+		
+		if ok {
 			if item.prefix != "" {
 				fieldValues[item.prefix] = append(fieldValues[item.prefix], m)
 			}
