@@ -2,7 +2,7 @@ package schema
 
 import (
 	"data-comparator/internal/pkg/config"
-	"data-comparator/internal/pkg/datareader"
+	"data-comparator/internal/pkg/types"
 	"fmt"
 	"io"
 	"strconv"
@@ -13,7 +13,7 @@ import (
 const DefaultSampleSize = 1000
 
 // Generate creates a schema by sampling records from a data reader.
-func Generate(reader datareader.DataReader, samplerConfig *config.Sampler) (*Schema, error) {
+func Generate(reader types.DataReader, samplerConfig *config.Sampler) (*Schema, error) {
 	sampleSize := DefaultSampleSize
 	if samplerConfig != nil && samplerConfig.SampleSize > 0 {
 		sampleSize = samplerConfig.SampleSize
@@ -105,8 +105,8 @@ func inferType(values []interface{}) string {
 	return "string"
 }
 
-func sampleRecords(reader datareader.DataReader, sampleSize int) ([]datareader.Record, error) {
-	var records []datareader.Record
+func sampleRecords(reader types.DataReader, sampleSize int) ([]types.Record, error) {
+	var records []types.Record
 	for i := 0; i < sampleSize; i++ {
 		record, err := reader.Read()
 		if err != nil {
@@ -138,7 +138,7 @@ func CollectFieldValues(data interface{}, fieldValues map[string][]interface{}) 
 
 		var m map[string]interface{}
 		var ok bool
-		if record, isRecord := item.data.(datareader.Record); isRecord {
+		if record, isRecord := item.data.(types.Record); isRecord {
 			m = map[string]interface{}(record)
 			ok = true
 		} else if mapData, isMap := item.data.(map[string]interface{}); isMap {
@@ -157,7 +157,7 @@ func CollectFieldValues(data interface{}, fieldValues map[string][]interface{}) 
 				}
 				queue = append(queue, workItem{data: value, prefix: newKey})
 			}
-		} else if r, ok := item.data.(datareader.Record); ok {
+		} else if r, ok := item.data.(types.Record); ok {
 			if item.prefix != "" {
 				fieldValues[item.prefix] = append(fieldValues[item.prefix], r)
 			}
