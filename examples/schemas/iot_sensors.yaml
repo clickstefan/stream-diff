@@ -1,0 +1,52 @@
+# IoT Sensor Data Schema - Time-series sensor data
+key: sensor_id
+max_key_size: 10
+fields:
+  sensor_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  device_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  timestamp:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  location:
+    type: string
+    stats: ["cardinality", "availability"]
+  latitude:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  longitude:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  temperature:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  humidity:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  pressure:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  air_quality:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  battery_level:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  signal_strength:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  firmware_version:
+    type: string
+    stats: ["cardinality", "availability"]
+  device_status:
+    type: string
+    stats: ["cardinality", "availability"]
+  calibration_date:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  last_maintenance:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]

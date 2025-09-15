@@ -10,6 +10,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -384,18 +385,35 @@ func (g *StreamGenerator) generateFormattedValue(format string, recordID int64) 
 	// Simple format substitution
 	switch format {
 	case "email":
-		return fmt.Sprintf("user%d@example.com", recordID)
+		domains := []string{"example.com", "test.com", "company.com", "email.org", "demo.net"}
+		usernames := []string{"user", "test", "admin", "customer", "demo", "sample"}
+		username := usernames[g.rng.Intn(len(usernames))]
+		domain := domains[g.rng.Intn(len(domains))]
+		return fmt.Sprintf("%s%d@%s", username, recordID, domain)
 	case "phone":
-		return fmt.Sprintf("+1%d%d%d%d%d%d%d%d%d%d", 
-			g.rng.Intn(10), g.rng.Intn(10), g.rng.Intn(10),
-			g.rng.Intn(10), g.rng.Intn(10), g.rng.Intn(10),
-			g.rng.Intn(10), g.rng.Intn(10), g.rng.Intn(10),
-			g.rng.Intn(10))
+		return fmt.Sprintf("+1-%03d-%03d-%04d", 
+			200+g.rng.Intn(800), g.rng.Intn(900)+100, g.rng.Intn(10000))
 	case "uuid":
 		return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x",
 			g.rng.Uint32(), g.rng.Uint32()&0xffff, g.rng.Uint32()&0xffff,
 			g.rng.Uint32()&0xffff, g.rng.Uint64()&0xffffffffffff)
+	case "ip":
+		return fmt.Sprintf("%d.%d.%d.%d", 
+			10+g.rng.Intn(245), g.rng.Intn(256), g.rng.Intn(256), 1+g.rng.Intn(254))
+	case "mac":
+		return fmt.Sprintf("%02x:%02x:%02x:%02x:%02x:%02x",
+			g.rng.Intn(256), g.rng.Intn(256), g.rng.Intn(256),
+			g.rng.Intn(256), g.rng.Intn(256), g.rng.Intn(256))
+	case "api_key":
+		return fmt.Sprintf("ak_%s", g.generateRandomString(32))
 	default:
+		// Handle dynamic format patterns
+		if strings.Contains(format, "{id}") {
+			return strings.ReplaceAll(format, "{id}", strconv.FormatInt(recordID, 10))
+		}
+		if strings.Contains(format, "{random}") {
+			return strings.ReplaceAll(format, "{random}", g.generateRandomString(8))
+		}
 		return format
 	}
 }
