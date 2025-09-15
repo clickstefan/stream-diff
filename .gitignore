@@ -30,3 +30,14 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Generated reports and output files
+final_report.yaml
+*_report.yaml
+periodic_reports/
+time_based_*
+stream-diff
+*.log
+
+# Temporary test files
+/tmp/
