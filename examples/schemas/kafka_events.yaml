@@ -1,0 +1,61 @@
+# Kafka Event Stream Schema - User activity events
+key: event_id
+max_key_size: 10
+fields:
+  event_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  timestamp:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  user_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  session_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  event_type:
+    type: string
+    stats: ["cardinality", "availability"]
+  page_url:
+    type: string
+    stats: ["cardinality", "availability"]
+  user_agent:
+    type: string
+    stats: ["cardinality", "availability"]
+  browser:
+    type: string
+    stats: ["cardinality", "availability"]
+  os:
+    type: string
+    stats: ["cardinality", "availability"]
+  device_type:
+    type: string
+    stats: ["cardinality", "availability"]
+  ip_address:
+    type: string
+    stats: ["cardinality", "availability"]
+  country:
+    type: string
+    stats: ["cardinality", "availability"]
+  city:
+    type: string
+    stats: ["cardinality", "availability"]
+  timezone:
+    type: string
+    stats: ["cardinality", "availability"]
+  referrer:
+    type: string
+    stats: ["cardinality", "availability"]
+  utm_source:
+    type: string
+    stats: ["cardinality", "availability"]
+  utm_medium:
+    type: string
+    stats: ["cardinality", "availability"]
+  utm_campaign:
+    type: string
+    stats: ["cardinality", "availability"]
+  properties:
+    type: object
+    stats: ["availability"]

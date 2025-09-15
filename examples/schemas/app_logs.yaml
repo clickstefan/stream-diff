@@ -1,0 +1,70 @@
+# Application Log Schema - Microservice logs
+key: log_id
+max_key_size: 10
+fields:
+  log_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  timestamp:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  level:
+    type: string
+    stats: ["cardinality", "availability"]
+  service_name:
+    type: string
+    stats: ["cardinality", "availability"]
+  version:
+    type: string
+    stats: ["cardinality", "availability"]
+  hostname:
+    type: string
+    stats: ["cardinality", "availability"]
+  pod_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  container_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  process_id:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  thread_id:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  request_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  user_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  method:
+    type: string
+    stats: ["cardinality", "availability"]
+  endpoint:
+    type: string
+    stats: ["cardinality", "availability"]
+  http_status:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  response_time:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  error_code:
+    type: string
+    stats: ["cardinality", "availability"]
+  error_message:
+    type: string
+    stats: ["cardinality", "availability"]
+  stack_trace:
+    type: string
+    stats: ["cardinality", "availability"]
+  message:
+    type: string
+    stats: ["cardinality", "availability"]
+  tags:
+    type: array
+    stats: ["availability"]
+  metadata:
+    type: object
+    stats: ["availability"]

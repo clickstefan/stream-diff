@@ -1,0 +1,10 @@
+key: id
+fields:
+  id:
+    type: numeric
+  status:
+    type: string
+  score:
+    type: numeric
+  timestamp:
+    type: datetime

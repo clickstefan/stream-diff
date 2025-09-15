@@ -1,26 +1,25 @@
 package schema
 
 import (
-	"data-comparator/internal/pkg/config"
-	"data-comparator/internal/pkg/datareader"
+	"data-comparator/internal/pkg/types"
 	"reflect"
 	"testing"
 )
 
 func TestGenerate_SimpleCSV(t *testing.T) {
-	cfg, err := config.Load("../../../testdata/testcase1_simple_csv/config1.yaml")
-	if err != nil {
-		t.Fatalf("Failed to load config: %v", err)
+	// Create test data similar to testcase1
+	testRecords := []types.Record{
+		{"user_id": "1", "email": "alice@email.com", "age": "30", "city": "New York", "plan_type": "premium", "last_login": "2025-09-10T12:00:00Z"},
+		{"user_id": "2", "email": "bob@email.com", "age": "25", "city": "Los Angeles", "plan_type": "basic", "last_login": "2025-09-11 10:00:00"},
+		{"user_id": "3", "email": "charlie@email.com", "age": "35", "city": "Chicago", "plan_type": "premium", "last_login": "09/12/2025"},
+		{"user_id": "4", "email": "david@email.com", "age": "40", "city": "New York", "plan_type": "basic", "last_login": "2025-09-12"},
+		{"user_id": "5", "email": "eve@email.com", "age": "28", "city": "Chicago", "plan_type": "basic", "last_login": "2025-09-13T05:30:00+01:00"},
 	}
-	cfg.Source.Path = "../../../" + cfg.Source.Path
-
-	reader, err := datareader.New(cfg.Source)
-	if err != nil {
-		t.Fatalf("Failed to create data reader: %v", err)
-	}
+	
+	reader := newTestReader(testRecords)
 	defer reader.Close()
 
-	schema, err := Generate(reader, cfg.Source.Sampler)
+	schema, err := Generate(reader, nil)
 	if err != nil {
 		t.Fatalf("Generate() error = %v", err)
 	}

@@ -1,0 +1,48 @@
+key: user_id
+max_key_size: 10
+fields:
+  user_id:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  email:
+    type: string
+    stats: ["cardinality", "availability"]
+  first_name:
+    type: string
+    stats: ["cardinality", "availability"]
+  last_name:
+    type: string
+    stats: ["cardinality", "availability"]
+  age:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  city:
+    type: string
+    stats: ["cardinality", "availability"]
+  country:
+    type: string
+    stats: ["cardinality", "availability"]
+  plan_type:
+    type: string
+    stats: ["cardinality", "availability"]
+  monthly_spend:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  last_login:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  account_status:
+    type: string
+    stats: ["cardinality", "availability"]
+  preferences:
+    type: object
+    stats: ["availability"]
+  tags:
+    type: array
+    stats: ["availability"]
+  created_at:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  updated_at:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]

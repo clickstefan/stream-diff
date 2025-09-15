@@ -1,0 +1,70 @@
+# Financial Transaction Schema - Banking/payment data
+key: transaction_id
+max_key_size: 10
+fields:
+  transaction_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  account_number:
+    type: string
+    stats: ["cardinality", "availability"]
+  user_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  timestamp:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  transaction_type:
+    type: string
+    stats: ["cardinality", "availability"]
+  amount:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  currency:
+    type: string
+    stats: ["cardinality", "availability"]
+  balance_before:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  balance_after:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  merchant_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  merchant_name:
+    type: string
+    stats: ["cardinality", "availability"]
+  merchant_category:
+    type: string
+    stats: ["cardinality", "availability"]
+  card_number_masked:
+    type: string
+    stats: ["cardinality", "availability"]
+  authorization_code:
+    type: string
+    stats: ["cardinality", "availability"]
+  payment_method:
+    type: string
+    stats: ["cardinality", "availability"]
+  channel:
+    type: string
+    stats: ["cardinality", "availability"]
+  location:
+    type: string
+    stats: ["cardinality", "availability"]
+  ip_address:
+    type: string
+    stats: ["cardinality", "availability"]
+  device_fingerprint:
+    type: string
+    stats: ["cardinality", "availability"]
+  risk_score:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  fraud_indicators:
+    type: array
+    stats: ["availability"]
+  metadata:
+    type: object
+    stats: ["availability"]

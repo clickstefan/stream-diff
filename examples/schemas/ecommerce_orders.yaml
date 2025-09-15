@@ -1,0 +1,61 @@
+# E-commerce Orders Schema - Typical database table
+key: order_id
+max_key_size: 10
+fields:
+  order_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  user_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  product_id:
+    type: string
+    stats: ["cardinality", "availability"]
+  sku:
+    type: string
+    stats: ["cardinality", "availability"]
+  category:
+    type: string
+    stats: ["cardinality", "availability"]
+  price:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  quantity:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  total_amount:
+    type: numeric
+    stats: ["min", "max", "avg", "cardinality"]
+  currency:
+    type: string
+    stats: ["cardinality", "availability"]
+  payment_method:
+    type: string
+    stats: ["cardinality", "availability"]
+  order_status:
+    type: string
+    stats: ["cardinality", "availability"]
+  shipping_address:
+    type: object
+    stats: ["availability"]
+  customer_email:
+    type: string
+    stats: ["cardinality", "availability"]
+  customer_phone:
+    type: string
+    stats: ["cardinality", "availability"]
+  order_date:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  shipped_date:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  delivered_date:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  created_at:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
+  updated_at:
+    type: datetime
+    stats: ["min", "max", "availability", "avgDaysAgo"]
