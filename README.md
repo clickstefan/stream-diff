@@ -10,7 +10,7 @@ This is particularly useful for data validation, migration testing, and ensuring
 
 ## Features
 
-- **Multiple Data Sources:** Supports reading from different sources, starting with CSV and JSON-Lines (`.jsonl`).
+- **Multiple Data Sources:** Supports reading from different sources, including CSV, JSON-Lines (`.jsonl`), and Protocol Buffers (Protobuf).
 - **Automatic Schema Detection:**
     - Infers the schema from a sample of the data.
     - Flattens nested JSON objects and arrays into a dot-notation format (e.g., `customer.address.city`).
@@ -18,6 +18,11 @@ This is particularly useful for data validation, migration testing, and ensuring
 - **Advanced String Parsing:**
     - Can detect and recursively parse JSON strings embedded within other file formats (e.g., a CSV field containing a JSON object).
     - Identifies field patterns using a library of built-in regex matchers and supports custom matchers.
+- **Protobuf Support:**
+    - Reads JSON-serialized protobuf messages (most common format for streaming data).
+    - Supports both `protobuf` and `proto` as source types for convenience.
+    - Handles nested protobuf messages with automatic field flattening.
+    - Compatible with protobuf messages exported to JSON format from various systems.
 - **Intelligent Date/Time Handling:**
     - Parses and compares `date`, `datetime`, and `timestamp` fields, even if their string formats differ between sources.
     - Supports timestamps with variable precision.
@@ -35,7 +40,7 @@ The tool is configured using two YAML files, one for each data source.
 **Example `config.yaml`:**
 ```yaml
 source:
-  # Type of the data source. Supported: csv, json
+  # Type of the data source. Supported: csv, json, protobuf (or proto)
   type: csv
   # Path to the source file.
   path: path/to/your/data.csv
@@ -48,6 +53,17 @@ source:
 #   key: user_id
 #   fields:
 #     ...
+```
+
+**Example Protobuf config:**
+```yaml
+source:
+  type: protobuf  # or "proto" for short
+  path: path/to/your/data.jsonpb
+  parser_config:
+    json_in_string: false  # Usually not needed for protobuf JSON
+  sampler:
+    sample_size: 1000  # Number of records to sample for schema detection
 ```
 
 ## Usage

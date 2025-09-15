@@ -134,3 +134,108 @@ func TestReader_EOF(t *testing.T) {
 		t.Errorf("Expected io.EOF, got %v", err)
 	}
 }
+
+func TestProtobufReader_JSONFormat(t *testing.T) {
+	cfg := config.Source{
+		Type: "protobuf",
+		Path: "../../../testdata/testcase4_protobuf/source1.jsonpb",
+	}
+	reader, err := New(cfg)
+	if err != nil {
+		t.Fatalf("New() error = %v", err)
+	}
+	defer reader.Close()
+
+	// Read first record
+	rec, err := reader.Read()
+	if err != nil {
+		t.Fatalf("Read() error = %v", err)
+	}
+
+	// Check basic field
+	if userID, ok := rec["user_id"].(string); ok {
+		if userID != "user-001" {
+			t.Errorf("user_id read incorrectly, got %s, want %s", userID, "user-001")
+		}
+	} else {
+		t.Error("Field 'user_id' is not a string")
+	}
+
+	// Check nested field
+	if profile, ok := rec["profile"].(map[string]interface{}); ok {
+		if email, ok := profile["email"].(string); ok {
+			if email != "alice@example.com" {
+				t.Errorf("Nested field email read incorrectly, got %s, want %s", email, "alice@example.com")
+			}
+		} else {
+			t.Error("Nested field 'email' is not a string")
+		}
+	} else {
+		t.Error("Field 'profile' is not a map")
+	}
+
+	// Check array field
+	if activity, ok := rec["activity"].(map[string]interface{}); ok {
+		if devices, ok := activity["devices"].([]interface{}); ok {
+			if len(devices) != 2 {
+				t.Errorf("devices array length incorrect, got %d, want %d", len(devices), 2)
+			}
+			if devices[0].(string) != "mobile" {
+				t.Errorf("First device incorrect, got %s, want %s", devices[0], "mobile")
+			}
+		} else {
+			t.Error("Field 'devices' is not an array")
+		}
+	} else {
+		t.Error("Field 'activity' is not a map")
+	}
+}
+
+func TestProtobufReader_MultipleTypes(t *testing.T) {
+	// Test both "protobuf" and "proto" as valid type names
+	for _, sourceType := range []string{"protobuf", "proto"} {
+		t.Run(sourceType, func(t *testing.T) {
+			cfg := config.Source{
+				Type: sourceType,
+				Path: "../../../testdata/testcase4_protobuf/source1.jsonpb",
+			}
+			reader, err := New(cfg)
+			if err != nil {
+				t.Fatalf("New() error for type %s = %v", sourceType, err)
+			}
+			defer reader.Close()
+
+			// Just verify we can read one record without error
+			_, err = reader.Read()
+			if err != nil {
+				t.Fatalf("Read() error for type %s = %v", sourceType, err)
+			}
+		})
+	}
+}
+
+func TestProtobufReader_EOF(t *testing.T) {
+	cfg := config.Source{
+		Type: "protobuf",
+		Path: "../../../testdata/testcase4_protobuf/source1.jsonpb",
+	}
+	reader, err := New(cfg)
+	if err != nil {
+		t.Fatalf("New() error = %v", err)
+	}
+	defer reader.Close()
+
+	// Read all 5 records
+	for i := 0; i < 5; i++ {
+		_, err := reader.Read()
+		if err != nil {
+			t.Fatalf("Read() error on record %d: %v", i+1, err)
+		}
+	}
+
+	// The next read should return io.EOF
+	_, err = reader.Read()
+	if err != io.EOF {
+		t.Errorf("Expected io.EOF, got %v", err)
+	}
+}
