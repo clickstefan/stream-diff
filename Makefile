@@ -1,8 +1,8 @@
-# Stream-Diff Modern Makefile with 2025 Best Practices
+# Data Stream Comparator Makefile
 
 # Build variables
-BINARY_NAME = stream-diff
-MAIN_PACKAGE = ./main.go
+BINARY_NAME = data-comparator
+MAIN_PACKAGE = .
 BUILD_DIR = build
 COVERAGE_DIR = coverage
 
@@ -10,17 +10,11 @@ COVERAGE_DIR = coverage
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 DATE ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-BUILT_BY ?= $(shell whoami)
 
 # Go build flags
-LDFLAGS = -ldflags="-X 'data-comparator/cmd.version=$(VERSION)' \
-                    -X 'data-comparator/cmd.commit=$(COMMIT)' \
-                    -X 'data-comparator/cmd.date=$(DATE)' \
-                    -X 'data-comparator/cmd.builtBy=$(BUILT_BY)'"
-
-# Go tools
-GOLANGCI_LINT_VERSION = v1.63.4
-GOVULNCHECK_VERSION = latest
+LDFLAGS = -ldflags="-X 'main.version=$(VERSION)' \
+                    -X 'main.commit=$(COMMIT)' \
+                    -X 'main.date=$(DATE)'"
 
 .PHONY: help
 help: ## Show this help message
@@ -30,16 +24,6 @@ help: ## Show this help message
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-15s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 ##@ Development
-
-.PHONY: setup
-setup: ## Install development dependencies
-	@echo "Installing development tools..."
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
-	go install golang.org/x/vuln/cmd/govulncheck@$(GOVULNCHECK_VERSION)
-	go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
-	go install honnef.co/go/tools/cmd/staticcheck@latest
-	go install github.com/securecodewarrior/sast-scan@latest
-	@echo "Development tools installed!"
 
 .PHONY: deps
 deps: ## Download and verify dependencies
@@ -111,72 +95,20 @@ test-integration: build ## Run integration tests
 
 ##@ Code Quality
 
-.PHONY: lint
-lint: ## Run linters
-	@echo "Running golangci-lint..."
-	golangci-lint run --verbose
-
-.PHONY: lint-fix
-lint-fix: ## Run linters with auto-fix
-	@echo "Running golangci-lint with auto-fix..."
-	golangci-lint run --fix --verbose
-
-.PHONY: format
-format: ## Format code
-	@echo "Formatting code..."
-	gofmt -s -w .
-	goimports -w .
-
 .PHONY: vet
 vet: ## Run go vet
 	@echo "Running go vet..."
 	go vet ./...
 
-.PHONY: staticcheck
-staticcheck: ## Run staticcheck
-	@echo "Running staticcheck..."
-	staticcheck ./...
-
-.PHONY: complexity
-complexity: ## Check cyclomatic complexity
-	@echo "Checking cyclomatic complexity..."
-	gocyclo -over 15 .
-
-##@ Security
-
-.PHONY: security
-security: ## Run security checks
-	@echo "Running security checks..."
-	gosec -quiet ./...
-
-.PHONY: vuln-check
-vuln-check: ## Check for known vulnerabilities
-	@echo "Checking for vulnerabilities..."
-	govulncheck ./...
+.PHONY: format
+format: ## Format code
+	@echo "Formatting code..."
+	gofmt -s -w .
 
 .PHONY: mod-verify
 mod-verify: ## Verify module dependencies
 	@echo "Verifying module dependencies..."
 	go mod verify
-
-##@ Quality Gates
-
-.PHONY: quality-check
-quality-check: deps vet lint staticcheck security vuln-check test ## Run all quality checks
-
-.PHONY: pre-commit
-pre-commit: format quality-check ## Run pre-commit checks
-
-.PHONY: ci-check
-ci-check: quality-check test-coverage ## Run CI checks
-
-##@ Documentation
-
-.PHONY: docs
-docs: ## Generate documentation
-	@echo "Generating documentation..."
-	go doc -all ./... > docs/api.txt
-	@echo "Documentation generated in docs/"
 
 ##@ Cleanup
 
@@ -199,28 +131,10 @@ version: ## Show version information
 	@echo "Version: $(VERSION)"
 	@echo "Commit: $(COMMIT)"
 	@echo "Date: $(DATE)"
-	@echo "Built by: $(BUILT_BY)"
-
-.PHONY: deps-update
-deps-update: ## Update dependencies
-	@echo "Updating dependencies..."
-	go get -u ./...
-	go mod tidy
-
-.PHONY: deps-audit
-deps-audit: ## Audit dependencies for security issues
-	@echo "Auditing dependencies..."
-	go list -json -deps ./... | nancy sleuth
 
 .PHONY: run
 run: build ## Build and run the application
-	./$(BUILD_DIR)/$(BINARY_NAME) --help
-
-.PHONY: release
-release: clean build-all test-coverage quality-check ## Prepare release artifacts
-	@echo "Release preparation complete!"
-	@echo "Artifacts in $(BUILD_DIR)/"
-	@echo "Coverage report in $(COVERAGE_DIR)/"
+	./$(BUILD_DIR)/$(BINARY_NAME) -help
 
 # Default target
 .DEFAULT_GOAL := help
