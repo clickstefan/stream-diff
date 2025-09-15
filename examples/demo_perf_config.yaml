@@ -1,0 +1,28 @@
+source:
+  type: stream
+  stream_generator:
+    # Use the simple schema for quick testing
+    schema_path: examples/simple_schema.yaml
+    
+    # Generate fewer records for quick demo
+    max_records: 1000
+    
+    # Moderate generation rate
+    records_per_second: 200
+    
+    # Small buffer to test backpressure
+    buffer_size: 50
+    
+    # Fixed seed for consistent results
+    seed: 123456
+    
+    # Use patterns for some fields
+    data_patterns:
+      status:
+        type: list
+        values: ["active", "inactive"]
+      
+      score:
+        type: range
+        min: 0.0
+        max: 100.0
