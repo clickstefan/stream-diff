@@ -3,6 +3,7 @@ package schema
 import (
 	"data-comparator/internal/pkg/config"
 	"data-comparator/internal/pkg/datareader"
+	"data-comparator/internal/pkg/patterndetection"
 	"fmt"
 	"io"
 	"strconv"
@@ -14,6 +15,11 @@ const DefaultSampleSize = 1000
 
 // Generate creates a schema by sampling records from a data reader.
 func Generate(reader datareader.DataReader, samplerConfig *config.Sampler) (*Schema, error) {
+	return GenerateWithPatternDetection(reader, samplerConfig, nil)
+}
+
+// GenerateWithPatternDetection creates a schema with optional AI-powered pattern detection.
+func GenerateWithPatternDetection(reader datareader.DataReader, samplerConfig *config.Sampler, patternConfig *config.PatternDetection) (*Schema, error) {
 	sampleSize := DefaultSampleSize
 	if samplerConfig != nil && samplerConfig.SampleSize > 0 {
 		sampleSize = samplerConfig.SampleSize
@@ -32,7 +38,14 @@ func Generate(reader datareader.DataReader, samplerConfig *config.Sampler) (*Sch
 		CollectFieldValues(record, fieldValues)
 	}
 
-	fields := analyzeFields(fieldValues)
+	// Create pattern detector
+	detectorFactory := patterndetection.NewDetectorFactory(patternConfig)
+	detector, err := detectorFactory.CreateDetector()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create pattern detector: %w", err)
+	}
+
+	fields := analyzeFieldsWithPatterns(fieldValues, detector)
 	schema := &Schema{
 		Fields: fields,
 	}
@@ -47,6 +60,34 @@ func analyzeFields(fieldValues map[string][]interface{}) map[string]*Field {
 		fields[name] = &Field{
 			Type:  inferType(values),
 			Stats: []string{}, // TODO: Calculate stats based on type
+		}
+	}
+	return fields
+}
+
+func analyzeFieldsWithPatterns(fieldValues map[string][]interface{}, detector patterndetection.PatternDetector) map[string]*Field {
+	fields := make(map[string]*Field)
+	for name, values := range fieldValues {
+		fieldType := inferType(values)
+		
+		// Detect patterns for this field
+		detectedMatchers, err := detector.DetectPatterns(name, fieldType, values)
+		if err != nil {
+			// Log error but continue with basic field info
+			fmt.Printf("Warning: failed to detect patterns for field %s: %v\n", name, err)
+			detectedMatchers = []patterndetection.Matcher{}
+		}
+
+		// Convert patterndetection.Matcher to schema.Matcher
+		matchers := make([]Matcher, len(detectedMatchers))
+		for i, m := range detectedMatchers {
+			matchers[i] = Matcher(m)
+		}
+
+		fields[name] = &Field{
+			Type:     fieldType,
+			Stats:    []string{}, // TODO: Calculate stats based on type
+			Matchers: matchers,
 		}
 	}
 	return fields

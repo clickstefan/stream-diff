@@ -1,0 +1,21 @@
+source:
+  type: csv
+  path: testdata/testcase1_simple_csv/source1.csv
+
+# Optional: Enable AI-powered pattern detection
+pattern_detection:
+  enabled: true
+  mode: offline  # or "online" for Claude/Anthropic API
+  
+  # Offline mode configuration (using built-in patterns)
+  offline_model:
+    # No additional configuration needed for built-in patterns
+    # Future: model_path: "path/to/custom/model.onnx"
+    # Future: model_type: "onnx"
+  
+  # Online mode configuration (for Claude/Anthropic API)
+  # online_api:
+  #   provider: claude  # or "anthropic"
+  #   api_key: "your-api-key-here"
+  #   model: "claude-3-haiku-20240307"  # optional, defaults to fastest model
+  #   endpoint: "https://api.anthropic.com/v1/messages"  # optional, uses default
