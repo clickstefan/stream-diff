@@ -147,6 +147,17 @@ func CollectFieldValues(data interface{}, fieldValues map[string][]interface{}) 
 				}
 				queue = append(queue, workItem{data: value, prefix: newKey})
 			}
+		} else if r, ok := item.data.(datareader.Record); ok {
+			if item.prefix != "" {
+				fieldValues[item.prefix] = append(fieldValues[item.prefix], r)
+			}
+			for key, value := range r {
+				newKey := key
+				if item.prefix != "" {
+					newKey = item.prefix + "." + key
+				}
+				queue = append(queue, workItem{data: value, prefix: newKey})
+			}
 		} else if a, ok := item.data.([]interface{}); ok {
 			if item.prefix != "" {
 				fieldValues[item.prefix] = append(fieldValues[item.prefix], a)
@@ -156,7 +167,6 @@ func CollectFieldValues(data interface{}, fieldValues map[string][]interface{}) 
 				queue = append(queue, workItem{data: v, prefix: arrayKey})
 			}
 		} else {
-			// Restore the prefix check, as removing it was a failed diagnostic
 			if item.prefix != "" {
 				fieldValues[item.prefix] = append(fieldValues[item.prefix], item.data)
 			}
