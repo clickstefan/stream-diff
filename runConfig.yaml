@@ -1,0 +1,16 @@
+source1:
+  type: csv
+  path: testdata/testcase1_simple_csv/source1.csv
+
+source2:
+  type: csv  
+  path: testdata/testcase1_simple_csv/source2.csv
+
+output:
+  final_report: final_report.yaml
+  periodic_reports: periodic_reports
+
+periodic:
+  enabled: true
+  time_interval_seconds: 10
+  record_interval: 3

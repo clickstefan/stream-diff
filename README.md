@@ -52,12 +52,72 @@ source:
 
 ## Usage
 
-To run a comparison, use the `compare` command and provide the paths to the two configuration files.
+### Command Line Interface
+
+The tool can be run in two ways:
+
+#### 1. Using a Run Configuration File (Recommended)
 
 ```bash
-# (Once implemented)
-go run ./cmd/comparator compare ./config1.yaml ./config2.yaml
+go run ./cmd/stream-diff -config runConfig.yaml -key user_id
 ```
+
+#### 2. Using Command Line Parameters
+
+```bash
+go run ./cmd/stream-diff \
+  -source1 path/to/source1.csv \
+  -source2 path/to/source2.csv \
+  -key user_id \
+  -enable-periodic \
+  -time-interval 30 \
+  -record-interval 1000 \
+  -output-dir ./reports
+```
+
+### Run Configuration File
+
+Create a `runConfig.yaml` file to define your comparison settings:
+
+```yaml
+source1:
+  type: csv
+  path: data/source1.csv
+  parser_config:
+    json_in_string: false
+
+source2:
+  type: csv  
+  path: data/source2.csv
+  parser_config:
+    json_in_string: false
+
+output:
+  final_report: final_report.yaml
+  periodic_reports: periodic_reports
+
+periodic:
+  enabled: true
+  time_interval_seconds: 30
+  record_interval: 1000
+```
+
+### Periodic Diff Reporting
+
+The tool supports periodic reporting of differences as data streams are processed. This is useful for:
+- Monitoring long-running comparisons
+- Early detection of data differences
+- Progress tracking for large datasets
+
+**Configuration Options:**
+- `time_interval_seconds`: Generate reports every N seconds
+- `record_interval`: Generate reports every N records processed
+- Both options can be used together - reports trigger when either condition is met
+
+**Output:**
+- Periodic reports are saved to timestamped YAML files in the specified directory
+- Console output shows real-time progress updates
+- Final comprehensive report is generated at the end
 
 ## Testing
 

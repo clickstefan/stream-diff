@@ -1,0 +1,37 @@
+# Example runConfig.yaml for stream-diff
+# This configuration file defines how to compare two data sources with periodic reporting
+
+# First data source configuration
+source1:
+  type: csv  # Supported types: csv, json
+  path: testdata/testcase1_simple_csv/source1.csv
+  parser_config:
+    json_in_string: false  # Set to true if CSV contains JSON strings to parse
+  sampler:
+    sample_size: 1000      # Number of records to sample for schema generation
+
+# Second data source configuration  
+source2:
+  type: csv
+  path: testdata/testcase1_simple_csv/source2.csv
+  parser_config:
+    json_in_string: false
+  sampler:
+    sample_size: 1000
+
+# Output configuration
+output:
+  final_report: final_report.yaml           # Path for the final comparison report
+  periodic_reports: periodic_reports        # Directory for periodic reports
+
+# Periodic diff reporting configuration
+periodic:
+  enabled: true                 # Enable/disable periodic reporting
+  time_interval_seconds: 30     # Trigger report every N seconds (0 to disable)
+  record_interval: 1000         # Trigger report every N records processed (0 to disable)
+  
+# Note: If both time_interval_seconds and record_interval are specified,
+# a report will be generated when either condition is met.
+# If both are 0 when periodic.enabled is true, defaults will be applied:
+# - time_interval_seconds: 30
+# - record_interval: 1000
