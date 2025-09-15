@@ -1,0 +1,49 @@
+summary:
+  source1_rows: 5
+  source2_rows: 5
+  matching_keys: 4
+  identical_rows: 3
+  keys_only_in_source1: 1
+  keys_only_in_source2: 1
+schema_comparison:
+  source1_only_fields: []
+  source2_only_fields: []
+  fields_with_type_diffs: []
+  fields_with_stat_diffs:
+    age:
+      source1: {min: 25, max: 40, avg: 31.6}
+      source2: {min: 25, max: 50, avg: 35.2}
+    plan_type:
+      source1: {cardinality: 2}
+      source2: {cardinality: 3}
+value_diffs_by_key:
+  "1":
+    - field: age
+      source1_value: 30
+      source2_value: 31
+    - field: plan_type
+      source1_value: "premium"
+      source2_value: "premium_plus"
+    - field: last_login
+      source1_value: "2025-09-10T12:00:00Z"
+      source2_value: "2025-09-10T13:00:00Z"
+keys_only:
+  in_source1:
+    - "5"
+  in_source2:
+    - "6"
+field_stats:
+  source1:
+    fields:
+      user_id: { min: 1, max: 5, avg: 3, cardinality: 5, availability: 1.0 }
+      age: { min: 25, max: 40, avg: 31.6, cardinality: 5, availability: 1.0 }
+      city: { cardinality: 3, availability: 1.0 }
+      plan_type: { cardinality: 2, availability: 1.0 }
+      last_login: { min: "2025-09-10T12:00:00Z", max: "2025-09-13T04:30:00Z", avg: "2025-09-11T18:54:00Z", avgDaysAgo: 1.2, availability: 1.0 }
+  source2:
+    fields:
+      user_id: { min: 1, max: 6, avg: 3.2, cardinality: 5, availability: 1.0 }
+      age: { min: 25, max: 50, avg: 35.2, cardinality: 5, availability: 1.0 }
+      city: { cardinality: 3, availability: 1.0 }
+      plan_type: { cardinality: 3, availability: 1.0 }
+      last_login: { min: "2025-09-10T13:00:00Z", max: "2025-09-13T00:00:00Z", avg: "2025-09-11T21:48:00Z", avgDaysAgo: 1.1, availability: 1.0 }

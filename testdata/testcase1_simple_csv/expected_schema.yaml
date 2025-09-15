@@ -1,0 +1,30 @@
+key: user_id
+fields:
+  user_id:
+    type: numeric
+    stats: [min, max, avg, availability, cardinality]
+    matchers:
+    - isNumeric: true
+  email:
+    type: string
+    stats: [availability, cardinality]
+    matchers:
+    - regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+  age:
+    type: numeric
+    stats: [min, max, avg, availability, cardinality]
+    matchers:
+    - isNumeric: true
+  city:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  plan_type:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  last_login:
+    type: datetime
+    stats: [min, max, avg, avgDaysAgo, availability]
+    matchers:
+    - isDateTime: true

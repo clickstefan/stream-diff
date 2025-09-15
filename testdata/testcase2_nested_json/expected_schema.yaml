@@ -1,0 +1,65 @@
+key: event_id
+max_key_size: 36 # example of a constraint
+fields:
+  event_id:
+    type: string
+    stats: [availability, cardinality]
+    matchers:
+    - regex: "^evt-[0-9a-f]{3}$"
+  timestamp:
+    type: timestamp
+    stats: [min, max, avg, avgDaysAgo, availability]
+    matchers:
+    - isDateTime: true
+  customer:
+    type: object
+    stats: [availability]
+    matchers: []
+  customer.id:
+    type: string
+    stats: [availability, cardinality]
+    matchers:
+    - regex: "^cust-[a-z]$"
+  customer.region:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  tags:
+    type: array
+    stats: [availability, count]
+    matchers: []
+  tags[].key:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  tags[].value:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []
+  metrics:
+    type: object
+    stats: [availability]
+    matchers: []
+  metrics.latency_ms:
+    type: numeric
+    stats: [min, max, avg, availability]
+    matchers:
+    - isNumeric: true
+  metrics.errors:
+    type: numeric
+    stats: [min, max, avg, availability]
+    matchers:
+    - isNumeric: true
+  payload_size:
+    type: numeric
+    stats: [min, max, avg, availability]
+    matchers:
+    - isNumeric: true
+  features:
+    type: array
+    stats: [availability, count]
+    matchers: []
+  features[]:
+    type: string
+    stats: [availability, cardinality]
+    matchers: []

@@ -1,0 +1,6 @@
+user_id,email,age,city,plan_type,last_login
+1,alice@email.com,31,New York,premium_plus,"2025-09-10T13:00:00Z"
+2,bob@email.com,25,Los Angeles,basic,"2025-09-11 10:00:00"
+3,charlie@email.com,35,Chicago,premium,"09/12/2025"
+6,frank@email.com,50,Miami,premium,"2025-09-13"
+4,david@email.com,40,New York,basic,"2025-09-12"

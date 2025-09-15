@@ -1,0 +1,6 @@
+source:
+  type: json
+  path: testdata/testcase2_nested_json/source2.jsonl
+  sampler:
+    # override default of 1000
+    sample_size: 100
