@@ -1,0 +1,7 @@
+source:
+  type: protobuf
+  path: testdata/testcase4_protobuf/source2.jsonpb
+  parser_config:
+    json_in_string: false
+  sampler:
+    sample_size: 100

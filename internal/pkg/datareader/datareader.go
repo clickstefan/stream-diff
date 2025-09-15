@@ -24,6 +24,8 @@ func New(cfg config.Source) (DataReader, error) {
 		return NewCSVReader(cfg)
 	case "json":
 		return NewJSONReader(cfg)
+	case "protobuf", "proto":
+		return NewProtobufReader(cfg)
 	default:
 		return nil, fmt.Errorf("unsupported source type: %s", cfg.Type)
 	}
