@@ -9,8 +9,9 @@ import (
 )
 
 func TestCLIGenerator(t *testing.T) {
-	// Build the CLI tool first
+	// Build the CLI tool first - run from the root directory
 	buildCmd := exec.Command("make", "build")
+	buildCmd.Dir = "../.."
 	if err := buildCmd.Run(); err != nil {
 		t.Fatalf("Failed to build CLI tool: %v", err)
 	}
@@ -41,7 +42,7 @@ func TestCLIGenerator(t *testing.T) {
 		},
 		{
 			name:     "With schema file",
-			args:     []string{"-schema", "examples/user_schema.yaml", "-count", "4", "-format", "jsonl"},
+			args:     []string{"-schema", "../../examples/user_schema.yaml", "-count", "4", "-format", "jsonl"},
 			wantRows: 4,
 			format:   "jsonl",
 		},
@@ -49,7 +50,7 @@ func TestCLIGenerator(t *testing.T) {
 	
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command("./bin/stream-generator", tt.args...)
+			cmd := exec.Command("../../bin/stream-generator", tt.args...)
 			var stdout bytes.Buffer
 			cmd.Stdout = &stdout
 			
@@ -91,11 +92,11 @@ func TestCLIGenerator(t *testing.T) {
 
 func TestRealWorldSchemas(t *testing.T) {
 	schemas := []string{
-		"examples/schemas/ecommerce_orders.yaml",
-		"examples/schemas/kafka_events.yaml",
-		"examples/schemas/app_logs.yaml",
-		"examples/schemas/iot_sensors.yaml",
-		"examples/schemas/financial_transactions.yaml",
+		"../../examples/schemas/ecommerce_orders.yaml",
+		"../../examples/schemas/kafka_events.yaml", 
+		"../../examples/schemas/app_logs.yaml",
+		"../../examples/schemas/iot_sensors.yaml",
+		"../../examples/schemas/financial_transactions.yaml",
 	}
 	
 	for _, schema := range schemas {
@@ -106,7 +107,7 @@ func TestRealWorldSchemas(t *testing.T) {
 			}
 			
 			// Test generation with the schema
-			cmd := exec.Command("./bin/stream-generator", "-schema", schema, "-count", "2", "-format", "jsonl")
+			cmd := exec.Command("../../bin/stream-generator", "-schema", schema, "-count", "2", "-format", "jsonl")
 			var stdout bytes.Buffer
 			cmd.Stdout = &stdout
 			
@@ -134,7 +135,7 @@ func TestRealWorldSchemas(t *testing.T) {
 
 func TestPerformance(t *testing.T) {
 	// Test that we can generate a reasonable number of records quickly
-	cmd := exec.Command("./bin/stream-generator", "-count", "1000", "-format", "jsonl")
+	cmd := exec.Command("../../bin/stream-generator", "-count", "1000", "-format", "jsonl")
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
 	
