@@ -1,0 +1,271 @@
+# Configuration for golangci-lint
+# 2025 Best Practices Configuration
+# https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 10m
+  issues-exit-code: 1
+  tests: true
+  build-tags: []
+  skip-dirs:
+    - vendor
+    - testdata
+  skip-files: []
+  allow-parallel-runners: true
+  go: '1.25'
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+  uniq-by-line: true
+  sort-results: true
+
+linters-settings:
+  # Enable all available linters for comprehensive analysis
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+    exclude-functions: []
+
+  gosimple:
+    checks: ["all"]
+
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment # Can be too noisy
+      - shadow # Can be too noisy
+
+  staticcheck:
+    checks: ["all"]
+
+  unused:
+    check-exported: true
+
+  misspell:
+    locale: US
+    ignore-words: []
+
+  gocyclo:
+    min-complexity: 15
+
+  dupl:
+    threshold: 100
+
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+
+  lll:
+    line-length: 120
+    tab-width: 4
+
+  unparam:
+    check-exported: true
+
+  nakedret:
+    max-func-lines: 30
+
+  prealloc:
+    simple: true
+    range-loops: true
+    for-loops: false
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - whyNoLint # We want to require lint explanations
+
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+      - name: unused-parameter
+        severity: warning
+        disabled: false
+      - name: unreachable-code
+        severity: warning
+        disabled: false
+
+  exhaustive:
+    check-generated: false
+    default-signifies-exhaustive: true
+
+  gofumpt:
+    lang-version: "1.25"
+    extra-rules: true
+
+  goimports:
+    local-prefixes: data-comparator
+
+  godot:
+    scope: declarations
+    exclude: []
+    capital: false
+
+  wsl:
+    strict-append: true
+    allow-assign-and-call: true
+    allow-multiline-assign: true
+    allow-cuddle-declarations: false
+    allow-trailing-comment: false
+    force-case-trailing-whitespace: 0
+    force-err-cuddling: false
+    allow-separated-leading-comment: false
+
+  nlreturn:
+    block-size: 2
+
+  testpackage:
+    skip-regexp: '(export|internal)_test\.go'
+
+  thelper:
+    test:
+      first: true
+      name: true
+      begin: true
+    benchmark:
+      first: true
+      name: true
+      begin: true
+
+linters:
+  enable:
+    # Enabled by default
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    
+    # Additional quality linters
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+    - contextcheck
+    - cyclop
+    - decorder
+    - depguard
+    - dogsled
+    - dupl
+    - durationcheck
+    - errname
+    - errorlint
+    - execinquery
+    - exhaustive
+    - exportloopref
+    - forbidigo
+    - forcetypeassert
+    - funlen
+    - gci
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gofmt
+    - gofumpt
+    - goheader
+    - goimports
+    - gomnd
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - grouper
+    - importas
+    - interfacebloat
+    - ireturn
+    - lll
+    - loggercheck
+    - makezero
+    - misspell
+    - nakedret
+    - nestif
+    - nilerr
+    - nilnil
+    - nlreturn
+    - noctx
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - predeclared
+    - prealloc
+    - promlinter
+    - reassign
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - stylecheck
+    - tagliatelle
+    - tenv
+    - testableexamples
+    - testpackage
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - usestdlibvars
+    - wastedassign
+    - whitespace
+    - wrapcheck
+    - wsl
+
+  disable:
+    # Disable linters that might be too noisy or opinionated
+    - varnamelen # Can be too restrictive
+    - exhaustruct # Can be too restrictive for structs
+    - paralleltest # Not always applicable
+
+issues:
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - funlen
+        - gocognit
+        - lll
+
+    # Exclude some static analysis issues in vendor directories
+    - path: vendor/
+      linters:
+        - all
+
+    # Exclude magic number checks for test files and version info
+    - path: _test\.go|version\.go
+      linters:
+        - gomnd
+
+    # Allow long lines in generated files
+    - source: "^//go:generate "
+      linters:
+        - lll
+
+  exclude-use-default: false
+  exclude:
+    # Common false positives
+    - "Error return value of .((os\\.)?std(out|err)\\..*|.*Close|.*Flush|os\\.Remove(All)?|.*printf?|os\\.(Un)?Setenv). is not checked"
+    - "exported (type|method|function) (.+) should have comment or be unexported"
+    - "ST1000: at least one file in a package should have a package comment"
+
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  new: false
+  fix: false
