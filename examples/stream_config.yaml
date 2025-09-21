@@ -1,0 +1,51 @@
+source:
+  type: stream
+  stream_generator:
+    # Path to schema file that defines the structure of generated data
+    schema_path: examples/user_schema.yaml
+    
+    # Generate 10,000 records (0 = unlimited)
+    max_records: 10000
+    
+    # Generate 100 records per second (0 = no rate limiting)
+    records_per_second: 100
+    
+    # Buffer size for backpressure handling
+    buffer_size: 500
+    
+    # Random seed for reproducible data generation (0 = use current time)
+    seed: 42
+    
+    # Custom data patterns for specific fields
+    data_patterns:
+      # Generate plan types from a predefined list
+      plan_type:
+        type: list
+        values: ["basic", "premium", "enterprise", "free", "trial"]
+      
+      # Generate ages within a realistic range
+      age:
+        type: range
+        min: 18
+        max: 85
+      
+      # Generate monthly spend in a realistic range for each plan type
+      monthly_spend:
+        type: range
+        min: 0
+        max: 999.99
+      
+      # Generate account status from a predefined list
+      account_status:
+        type: list
+        values: ["active", "inactive", "suspended", "pending_verification", "closed"]
+      
+      # Use format pattern for consistent email generation
+      email:
+        type: format
+        format: email
+      
+      # Generate countries from a predefined list
+      country:
+        type: list
+        values: ["USA", "Canada", "UK", "Germany", "France", "Australia", "Japan", "Brazil", "India", "Mexico"]

@@ -2,20 +2,16 @@ package datareader
 
 import (
 	"data-comparator/internal/pkg/config"
+	"data-comparator/internal/pkg/generator"
+	"data-comparator/internal/pkg/types"
 	"fmt"
 )
 
 // Record represents a single record from a data source, like a CSV row or a JSON object.
-type Record map[string]interface{}
+type Record = types.Record
 
 // DataReader is the interface for reading records from a data source.
-type DataReader interface {
-	// Read returns the next record from the source.
-	// It returns io.EOF when there are no more records.
-	Read() (Record, error)
-	// Close closes the reader and any underlying resources.
-	Close() error
-}
+type DataReader = types.DataReader
 
 // New creates a new DataReader based on the provided source configuration.
 func New(cfg config.Source) (DataReader, error) {
@@ -24,6 +20,8 @@ func New(cfg config.Source) (DataReader, error) {
 		return NewCSVReader(cfg)
 	case "json":
 		return NewJSONReader(cfg)
+	case "stream":
+		return generator.NewFromConfig(cfg)
 	default:
 		return nil, fmt.Errorf("unsupported source type: %s", cfg.Type)
 	}
